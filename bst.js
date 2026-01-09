@@ -28,6 +28,51 @@ class Tree {
 
         return node;
     }
+
+    insertItem(node, value){
+        if (node === null) return new Node(value);
+
+        if (value < node.value){
+            node.left = this.insertItem(node.left, value);
+        }else if(value > node.value){
+            node.right = this.insertItem(node.right, value);
+        }
+
+        return node;
+    }
+
+    deleteItem(node, value){
+        if (node === null) return null;
+
+        if (value < node.value){
+            node.left = this.deleteItem(node.left, value);
+        }else if (value > node.value){
+            node.right = this.deleteItem(node.right, value);
+        }else {
+            if (node.left === null){
+                return node.right;
+            }else if (node.right === null){
+                return node.left;
+            }
+
+            let successorNode = this.__successorNode(node);
+            node.value = successorNode.value;
+
+            node.right = this.deleteItem(node.right, successorNode.value);
+        }
+
+        return node;
+    }
+
+    __successorNode(node){
+        node = node.right;
+
+        while(node !== null && node.left !== null){
+            node = node.left;
+        }
+
+        return node;
+    }
 }
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
@@ -63,8 +108,18 @@ function randomArrayLessThan100(){
 
 
 let tree = new Tree();
-let newArr = randomArrayLessThan100();
-let sortedArr = newArr.sort((a , b) => a - b);
-console.log(sortedArr);
+// let newArr = randomArrayLessThan100();
+// let sortedArr = newArr.sort((a , b) => a - b);
+// console.log(sortedArr);
+let sortedArr = [1,14,36,38,41,57,61,63,79,95];
 tree.root = tree.buildTree(sortedArr);
+prettyPrint(tree.root);
+// tree.insertItem(tree.root, 97);
+// prettyPrint(tree.root);
+
+tree.deleteItem(tree.root, 61);
+// prettyPrint(tree.root);
+tree.deleteItem(tree.root, 41);
+// prettyPrint(tree.root);
+tree.deleteItem(tree.root, 36);
 prettyPrint(tree.root);
