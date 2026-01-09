@@ -73,6 +73,96 @@ class Tree {
 
         return node;
     }
+
+    find(value, node = this.root){
+        // returns node with given value
+
+        if(value === node.value){
+            return node;
+        }
+
+        if(value < node.value){
+            return this.find(value, node.left)
+        }else if(value > node.value){
+            return this.find(value, node.right)
+        }
+    }
+
+    levelOrderForEach(callback){ // BFS = all nodes on same depth then move to next depth
+        // using a queue
+
+        if (this.root === null) return [];
+        
+        if (!callback){
+            throw new Error("Callback Function is required!");
+        }
+
+        let nodes = [];
+        let queue = [this.root];
+
+        while(queue.length > 0){
+            let current = queue.shift();
+            callback(nodes, current);
+
+            if(current.left !== null) {queue.push(current.left);}
+            if(current.right !== null) {queue.push(current.right);}
+        }
+
+        return nodes;
+
+        // a cleaner version which returns an array containing values if no callback is provided or with node data if callback is present 
+        // if (this.root === null) return [];
+
+        // const queue = [this.root];
+        // const results = [];
+
+        // while (queue.length > 0) {
+        //     const current = queue.shift();
+
+        //     // 1. If a callback is provided, call it with the node
+        //     if (callback) callback(current);
+
+        //     // 2. Always collect the value for the return array
+        //     results.push(current.value);
+
+        //     if (current.left) queue.push(current.left);
+        //     if (current.right) queue.push(current.right);
+        // }
+
+        // // 3. Return the collected values
+        // return results;
+        // }
+    }
+
+    inOrder(node = this.root){ // DFS
+        // left -> root -> right 
+
+        if  (node === null) { return; }
+
+        this.inOrder(node.left);
+        console.log(node.value);
+        this.inOrder(node.right);
+    }
+
+    preOrder(node = this.root){ // DFS 
+        // root -> left -> right 
+
+        if(node === null){return;}
+
+        console.log(node.value);
+        this.preOrder(node.left);
+        this.preOrder(node.right);
+    }
+
+    postOrder(node = this.root){ // DFS
+        // left -> right -> root 
+
+        if (node === null) return;
+
+        this.postOrder(node.left);
+        this.postOrder(node.right);
+        console.log(node.value);
+    }
 }
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
@@ -113,7 +203,7 @@ let tree = new Tree();
 // console.log(sortedArr);
 let sortedArr = [1,14,36,38,41,57,61,63,79,95];
 tree.root = tree.buildTree(sortedArr);
-prettyPrint(tree.root);
+// prettyPrint(tree.root);
 // tree.insertItem(tree.root, 97);
 // prettyPrint(tree.root);
 
@@ -123,3 +213,13 @@ tree.deleteItem(tree.root, 41);
 // prettyPrint(tree.root);
 tree.deleteItem(tree.root, 36);
 prettyPrint(tree.root);
+
+// console.log(tree.find(38));
+
+// console.log(tree.levelOrderForEach((arr, node) => {
+//     arr.push(node.value);
+// }));
+
+// tree.inOrder();
+// tree.preOrder();
+// tree.postOrder();
