@@ -264,9 +264,3 @@ function randomArrayLessThan100(){
 
     return resultArr.sort((a, b) => a - b);
 }
-
-
-
-let tree = new Tree();
-let newSortedArr = randomArrayLessThan100();
-console.log(newSortedArr);
