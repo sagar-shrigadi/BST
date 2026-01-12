@@ -77,6 +77,10 @@ class Tree {
     find(value, node = this.root){
         // returns node with given value
 
+        if(node === null){
+            return null;
+        }
+
         if(value === node.value){
             return node;
         }
@@ -220,6 +224,6 @@ prettyPrint(tree.root);
 //     arr.push(node.value);
 // }));
 
-// tree.inOrder();
+console.log(tree.find(111));
 // tree.preOrder();
 // tree.postOrder();
