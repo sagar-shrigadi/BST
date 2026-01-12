@@ -167,6 +167,72 @@ class Tree {
         this.postOrder(node.right);
         console.log(node.value);
     }
+
+    height(value){
+        let targetNode = this.find(value);
+
+        if (targetNode === null) return null;
+
+        return this.__calculateHeight(targetNode);
+    }
+
+    __calculateHeight(node){
+        if (node === null){
+            return -1; // -1 because caluculating edges instead of nodes --- i.e the left node has height of 0 
+        }
+
+        return Math.max(this.__calculateHeight(node.left), this.__calculateHeight(node.right)) + 1;
+    }
+
+    depth(value){
+        let node = this.root;
+        let count = 0;
+
+        while(node !== null){
+            if (node.value === value){
+                return count;
+            }
+
+            count++;
+
+            if (value < node.value){
+                node = node.left;
+            } else {
+                node = node.right;
+            }
+        }
+        return null;
+    }
+
+    isBalanced(node = this.root){
+        // for each node in the tree, determine if height of left and right subtrees is at most 1
+
+        if (node === null){
+            return [true, 0];
+        }
+
+        let leftSubtree = this.isBalanced(node.left);
+        let rightSubtree = this.isBalanced(node.right);
+
+        let balanced = (leftSubtree[0] && rightSubtree[0]) && (Math.abs(leftSubtree[1] - rightSubtree[1]) <= 1);
+        
+        return [balanced, Math.max(leftSubtree[1], rightSubtree[1]) + 1];
+    }
+
+    rebalanced(node = this.root){
+        let newArray = this.__InorderForRebalancing(node);
+        tree.root = this.buildTree(newArray);
+    }
+
+    __InorderForRebalancing(node, arr = []){
+        if (node === null) return;
+
+        this.__InorderForRebalancing(node.left, arr);
+        arr.push(node.value);
+        this.__InorderForRebalancing(node.right, arr);
+
+        return arr;
+    }
 }
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
@@ -196,34 +262,11 @@ function randomArrayLessThan100(){
         }
     }
 
-    return resultArr;
+    return resultArr.sort((a, b) => a - b);
 }
 
 
 
 let tree = new Tree();
-// let newArr = randomArrayLessThan100();
-// let sortedArr = newArr.sort((a , b) => a - b);
-// console.log(sortedArr);
-let sortedArr = [1,14,36,38,41,57,61,63,79,95];
-tree.root = tree.buildTree(sortedArr);
-// prettyPrint(tree.root);
-// tree.insertItem(tree.root, 97);
-// prettyPrint(tree.root);
-
-tree.deleteItem(tree.root, 61);
-// prettyPrint(tree.root);
-tree.deleteItem(tree.root, 41);
-// prettyPrint(tree.root);
-tree.deleteItem(tree.root, 36);
-prettyPrint(tree.root);
-
-// console.log(tree.find(38));
-
-// console.log(tree.levelOrderForEach((arr, node) => {
-//     arr.push(node.value);
-// }));
-
-console.log(tree.find(111));
-// tree.preOrder();
-// tree.postOrder();
+let newSortedArr = randomArrayLessThan100();
+console.log(newSortedArr);
